@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+<div id="app">
+    <ul vi-if="!items.length" class="item-list">
+        <li v-for="item of items" class="item"><p class="item-name">{{item.name}}, lat {{item.age}}</p>
+            <button @click="removeItem(item)">remove</button>
+        </li>
+    </ul>
+    <h1 vi-if="items.length"></h1>
+    <div class="add-item-box">
+        <input v-model="newName" placeholder="put the name here">
+        <button @click="addItem()">add item</button>
+    </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/vue@2.5.17/dist/vue.js"></script>
+<script>
+    const app = new Vue({
+        el: '#app',
+        data: {
+            newName: '',
+            greetings: 'yo',
+            items: [
+                {
+                    id: 0,
+                    name: "Grzegorz",
+                    age: 23
+                },
+                {
+                    id: 1,
+                    name: 'Bobek',
+                    age: 43
+                }
+            ]
+        },
+        methods: {
+            removeItem(item) {
+                const itemQuantity = this.items.length;
+                if (itemQuantity === 1) {
+                    this.items = [];
+                } else {
+                    const index = this.items.indexOf(item);
+                    this.items.splice(index, 1);
+                }
+            },
+            addItem() {
+                const id = this.findLastId() + 1,
+                    name = this.newName,
+                    age = this.getRandomAge();
+                const newItem = {id, name, age};
+                this.items.push(newItem);
+            },
+            findLastId() {
+                let tempLastId = 0;
+                this.items.map(item => {
+                    if (item.id > tempLastId) {
+                        tempLastId = item.id;
+                    }
+                });
+                return tempLastId;
+            },
+            getRandomAge() {
+                return Math.floor(Math.random() * 100);
+            }
+        }
+    });
+</script>
+
+</body>
+</html>
