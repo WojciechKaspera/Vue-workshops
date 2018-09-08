@@ -1,27 +1,30 @@
 <template>
     <div id="app">
-        <ul vi-if="!items.length" class="item-list">
+        <ul v-if="items.length" class="item-list">
             <li v-for="item of items" class="item"><p class="item-name">{{item.name}}, lat {{item.age}}</p>
                 <md-button class="md-raised" @click="removeItem(item)">remove</md-button>
             </li>
         </ul>
-        <h1 vi-if="items.length">Nie masz żadnych ziomków na liście</h1>
+        <h1 v-if="!items.length">Nie masz żadnych ziomków na liście{{items.length}}</h1>
         <div class="add-item-box">
             <form @submit.prevent="addItem()">
                 <md-field>
                     <label>Initial Value</label>
-                    <md-input v-validate.initial="{required: true}" name="newName" v-model="newName" placeholder="Wpisz imię nowego ziomka"></md-input>
+                    <md-input v-validate.initial="{required: true}" name="newName" v-model="newName"
+                              placeholder="Wpisz imię nowego ziomka"></md-input>
                 </md-field>
                 <md-button :disabled="this.errors.has('newName')" type="submit" class="md-raised">add item</md-button>
             </form>
-        </div>    </div>
+        </div>
+    </div>
 </template>
 
 <script>
     export default {
         name: 'app',
         data() {
-            return {newName: '',
+            return {
+                newName: '',
                 greetings: 'yo',
                 items: [
                     {
@@ -34,7 +37,8 @@
                         name: 'Bobek',
                         age: 43
                     }
-                ]}
+                ]
+            }
         },
         methods: {
             removeItem(item) {
@@ -52,6 +56,7 @@
                     age = this.getRandomAge();
                 const newItem = {id, name, age};
                 this.items.push(newItem);
+                this.$validator.reset();
             },
             findLastId() {
                 let tempLastId = 0;
@@ -65,7 +70,7 @@
             getRandomAge() {
                 return Math.floor(Math.random() * 100);
             }
-    }
+        }
     }
 </script>
 <style lang="scss">
@@ -73,15 +78,18 @@
         display: flex;
         flex-direction: row;
     }
+
     .item-list {
         padding: 0px;
     }
+
     .add-item-box {
         display: flex;
         flex-direction: column;
         justify-content: flex-start;
         align-items: flex-start;
     }
+
     #app {
         padding: 10vw;
         font-family: 'Avenir', Helvetica, Arial, sans-serif;
