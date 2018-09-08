@@ -1,10 +1,23 @@
 <template>
     <div class="item-list-box">
-        <ul v-if="items.length" class="item-list">
-            <li v-for="item of items" class="item"><p class="item-name">{{item.name}}, lat {{item.age}}</p>
-                <md-button class="md-raised" @click="removeItem(item)">remove</md-button>
-            </li>
-        </ul>
+        <hr class="line">
+        <md-table>
+            <md-table-row>
+                <md-table-head md-numeric>ID</md-table-head>
+                <md-table-head>Name</md-table-head>
+                <md-table-head>Age</md-table-head>
+                <md-table-head></md-table-head>
+            </md-table-row>
+            <md-table-row v-for="item of items">
+                <md-table-cell md-numeric>{{item.id}}</md-table-cell>
+                <md-table-cell>{{item.name}}</md-table-cell>
+                <md-table-cell>{{item.age}}</md-table-cell>
+                <md-table-cell>
+                    <md-button class="md-raised" @click="removeItem(item)">remove</md-button>
+                </md-table-cell>
+            </md-table-row>
+        </md-table>
+        <hr class="line">
         <div class="button-wrapper">
             <md-button class="md-raised" @click="sort('id')">Sortuj po kolejności dodania</md-button>
         </div>
@@ -36,6 +49,10 @@
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss">
+    .line {
+        width: 100%;
+    }
+
     .item-list-box {
         display: flex;
         flex-direction: column;
@@ -49,6 +66,6 @@
     }
 
     .item-list {
-        padding: 0px;
+        padding: 50px 0;
     }
 </style>

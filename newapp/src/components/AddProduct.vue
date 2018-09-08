@@ -1,6 +1,6 @@
 <template>
     <div>
-        <form @submit.prevent="addItem()" class="add-item-box">
+        <form @submit.prevent="addItem(newName)" class="add-item-box">
             <md-field>
                 <label>Initial Value</label>
                 <md-input v-validate.initial="{required: true}" name="newName" v-model="newName"
@@ -17,7 +17,7 @@
         props: {
             items: {
                 type: Array
-            }
+            },
         },
         data() {
             return {
@@ -25,8 +25,9 @@
             }
         },
         methods: {
-            addItem() {
+            addItem(newName) {
                 this.$emit('on-add', this.newName);
+                this.newName = newName = '';
             }
         }
     }

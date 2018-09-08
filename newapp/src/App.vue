@@ -1,13 +1,14 @@
 <template>
     <div id="app">
-        <add-product @on-add="addItem" :items="this.items"></add-product>
-        <product-list @on-remove="removeItem" @on-sort="sort" :items="this.items"></product-list>
+        <add-product @on-add="addItem" :items="sharedState.items"></add-product>
+        <product-list @on-remove="removeItem" @on-sort="sort" :items="sharedState.items"></product-list>
     </div>
 </template>
 
 <script>
     import ProductList from './components/ProductList';
     import AddProduct from './components/AddProduct';
+    import store from './store/index';
 
     export default {
         name: 'app',
@@ -15,39 +16,31 @@
             ProductList,
             AddProduct
         },
+        created() {
+          store.fetchItems();
+        },
         data() {
             return {
-                items: [
-                    {
-                        id: 0,
-                        name: "Grzegorz",
-                        age: 23
-                    },
-                    {
-                        id: 1,
-                        name: 'Bobek',
-                        age: 43
-                    }
-                ]
+                sharedState: store.state
             }
         },
         methods: {
             sort(criterium) {
                 if (criterium === 'id') {
-                    this.items.sort((a, b) => a.id > b.id);
+                    this.sharedState.items.sort((a, b) => a.id > b.id);
                 } else if (criterium === 'age') {
-                    this.items.sort((a, b) => a.age > b.age);
+                    this.sharedState.items.sort((a, b) => a.age > b.age);
                 } else {
                     console.log('coś nie działa');
                 }
             },
             removeItem(item) {
-                const itemQuantity = this.items.length;
+                const itemQuantity = this.sharedState.items.length;
                 if (itemQuantity === 1) {
-                    this.items = [];
+                    this.sharedState.items = [];
                 } else {
-                    const index = this.items.indexOf(item);
-                    this.items.splice(index, 1);
+                    const index = this.sharedState.items.indexOf(item);
+                    store.removeItem(item.id).then(this.sharedState.items.splice(index, 1));
                 }
             },
             addItem(newName) {
@@ -55,13 +48,15 @@
                     name = newName,
                     age = this.getRandomAge();
                 const newItem = {id, name, age};
-                this.items.push(newItem);
-                this.$validator.reset();
-                this.newName = '';
+                store.addItem(newItem).then(() => {
+                    this.sharedState.items.push(newItem);
+                    this.$validator.reset();
+                    this.newName = '';
+                });
             },
             findLastId() {
                 let tempLastId = 0;
-                this.items.map(item => {
+                this.sharedState.items.map(item => {
                     if (item.id > tempLastId) {
                         tempLastId = item.id;
                     }
@@ -76,7 +71,7 @@
 </script>
 <style lang="scss">
     #app {
-        padding: 10vw;
+        padding: 0 10vw;
         font-family: 'Avenir', Helvetica, Arial, sans-serif;
         -webkit-font-smoothing: antialiased;
         -moz-osx-font-smoothing: grayscale;

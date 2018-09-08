@@ -1,0 +1,29 @@
+{
+  "items": [
+    {
+      "id": 0,
+      "name": "Grzegorz",
+      "age": 23
+    },
+    {
+      "id": 8,
+      "name": "Krzysztof",
+      "age": 92
+    },
+    {
+      "id": 9,
+      "name": "Joanna",
+      "age": 77
+    },
+    {
+      "id": 10,
+      "name": "Jerzy",
+      "age": 60
+    },
+    {
+      "id": 11,
+      "name": "Stefan",
+      "age": 19
+    }
+  ]
+}
