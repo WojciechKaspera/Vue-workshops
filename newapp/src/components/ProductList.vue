@@ -1,14 +1,16 @@
 <template>
     <div class="item-list-box">
-        <hr class="line">
         <ul v-if="items.length" class="item-list">
             <li v-for="item of items" class="item"><p class="item-name">{{item.name}}, lat {{item.age}}</p>
                 <md-button class="md-raised" @click="removeItem(item)">remove</md-button>
             </li>
         </ul>
-        <hr class="line">
-        <md-button class="md-raised" @click="sort('id')">Sortuj po kolejności dodania</md-button>
-        <md-button class="md-raised" @click="sort('age')">Sortuj po wieku</md-button>
+        <div class="button-wrapper">
+            <md-button class="md-raised" @click="sort('id')">Sortuj po kolejności dodania</md-button>
+        </div>
+        <div class="button-wrapper">
+            <md-button class="md-raised" @click="sort('age')">Sortuj po wieku</md-button>
+        </div>
         <h1 v-if="!items.length">Nie masz żadnych ziomków na liście</h1>
     </div>
 </template>
@@ -34,10 +36,6 @@
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss">
-    .line {
-        color: black;
-        height: 2px;
-    }
     .item-list-box {
         display: flex;
         flex-direction: column;
