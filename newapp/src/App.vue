@@ -1,31 +1,22 @@
 <template>
     <div id="app">
-        <ul v-if="items.length" class="item-list">
-            <li v-for="item of items" class="item"><p class="item-name">{{item.name}}, lat {{item.age}}</p>
-                <md-button class="md-raised" @click="removeItem(item)">remove</md-button>
-            </li>
-        </ul>
-        <h1 v-if="!items.length">Nie masz żadnych ziomków na liście{{items.length}}</h1>
-        <div class="add-item-box">
-            <form @submit.prevent="addItem()">
-                <md-field>
-                    <label>Initial Value</label>
-                    <md-input v-validate.initial="{required: true}" name="newName" v-model="newName"
-                              placeholder="Wpisz imię nowego ziomka"></md-input>
-                </md-field>
-                <md-button :disabled="this.errors.has('newName')" type="submit" class="md-raised">add item</md-button>
-            </form>
-        </div>
+        <add-product @on-add="addItem" :items="this.items"></add-product>
+        <product-list @on-remove="removeItem" @on-sort="sort" :items="this.items"></product-list>
     </div>
 </template>
 
 <script>
+    import ProductList from './components/ProductList';
+    import AddProduct from './components/AddProduct';
+
     export default {
         name: 'app',
+        components: {
+            ProductList,
+            AddProduct
+        },
         data() {
             return {
-                newName: '',
-                greetings: 'yo',
                 items: [
                     {
                         id: 0,
@@ -41,6 +32,15 @@
             }
         },
         methods: {
+            sort(criterium) {
+                if (criterium === 'id') {
+                    this.items.sort((a, b) => a.id > b.id);
+                } else if (criterium === 'age') {
+                    this.items.sort((a, b) => a.age > b.age);
+                } else {
+                    console.log('coś nie działa');
+                }
+            },
             removeItem(item) {
                 const itemQuantity = this.items.length;
                 if (itemQuantity === 1) {
@@ -50,13 +50,14 @@
                     this.items.splice(index, 1);
                 }
             },
-            addItem() {
+            addItem(newName) {
                 const id = this.findLastId() + 1,
-                    name = this.newName,
+                    name = newName,
                     age = this.getRandomAge();
                 const newItem = {id, name, age};
                 this.items.push(newItem);
                 this.$validator.reset();
+                this.newName = '';
             },
             findLastId() {
                 let tempLastId = 0;
@@ -74,22 +75,6 @@
     }
 </script>
 <style lang="scss">
-    .item {
-        display: flex;
-        flex-direction: row;
-    }
-
-    .item-list {
-        padding: 0px;
-    }
-
-    .add-item-box {
-        display: flex;
-        flex-direction: column;
-        justify-content: flex-start;
-        align-items: flex-start;
-    }
-
     #app {
         padding: 10vw;
         font-family: 'Avenir', Helvetica, Arial, sans-serif;
